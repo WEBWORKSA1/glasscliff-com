@@ -1,0 +1,68 @@
+# Builds Glasscliff.com from _build/ and keeps it fresh.
+# - On every push to main that touches the sources: rebuild all pages and social images.
+# - Every day at 05:17 UTC: also refresh leadership headlines in data/news.json.
+# Pages are stored in Jekyll layout format (see _build/jekyll_export.py), which GitHub Pages renders.
+# Commits only when something changed, then asks GitHub Pages to rebuild.
+name: Build and daily refresh
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "_build/**"
+      - "data/news.json"
+      - ".github/workflows/site.yml"
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: site-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install SVG renderer
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq librsvg2-bin fonts-liberation fonts-dejavu-core
+      - name: Build pages (refresh news on the daily run)
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python3 _build/build.py --news
+          else
+            python3 _build/build.py
+          fi
+          python3 _build/jekyll_export.py
+      - name: Render social images
+        run: |
+          rsvg-convert -w 1200 -h 630 assets/img/og.svg -o assets/img/og.png
+          rsvg-convert -w 512 -h 512 assets/img/icon.svg -o assets/img/icon-512.png
+      - name: Commit changes
+        run: |
+          git config user.name "glasscliff-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes."
+            echo "CHANGED=0" >> "$GITHUB_ENV"
+          else
+            git commit -m "Site build: pages, sitemap, news and social images"
+            git push
+            echo "CHANGED=1" >> "$GITHUB_ENV"
+          fi
+      - name: Request a GitHub Pages build
+        if: env.CHANGED == '1'
+        continue-on-error: true
+        run: |
+          curl -s -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/builds"
