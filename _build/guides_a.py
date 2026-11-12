@@ -103,7 +103,7 @@ GUIDES_A = [
 <h3>The original UK findings</h3>
 <p>Ryan and Haslam's 2005 study of FTSE 100 companies found that firms appointing women to their boards were more likely to have had consistently poor share-price performance in the months before. Later work by Haslam, Ryan and colleagues refined how performance was measured and showed the picture depends on whether you look at share prices or accounting measures.</p>
 <h3>Studies that found no effect</h3>
-<p>Renée Adams, Amit Gupta and John Leeth (2009) examined US companies and did not find that women CEOs were appointed to firms in worse condition. A 2019 analysis of German and UK firms by Bechtoldt and colleagues also failed to find the original pattern, and a 2025 study by Xiaoxiao Li and colleagues, using several measures of financial distress for US firms, found no clear evidence of a glass cliff in CEO selection.</p>
+<p>Adams, Gupta and Leeth (2009) examined US companies and did not find that women CEOs were appointed to firms in worse condition. A 2019 analysis of German and UK firms by Bechtoldt and colleagues also failed to find the original pattern, and a 2025 study by Xiaoxiao Li and colleagues, using several measures of financial distress for US firms, found no clear evidence of a glass cliff in CEO selection.</p>
 <h3>New UK evidence on chairs</h3>
 <p>In 2025, Rita Goyal of Coventry University published a British Academy and Leverhulme-funded study of FTSE 350 chair appointments. It reported a higher likelihood of appointing a female chair in companies experiencing sustained financial decline, particularly during the COVID-19 period.</p>
 <h3>Beyond business</h3>
